@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quickcalc"
+version = "1.0.0"
+description = "Hotkey-summoned, text-first engineering calculator for Windows"
+requires-python = ">=3.11"
+dependencies = [
+    "PySide6-Essentials>=6.6",
+    "pint>=0.24",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pyinstaller>=6.10"]
+
+[project.gui-scripts]
+quickcalc = "quickcalc.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["quickcalc*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
