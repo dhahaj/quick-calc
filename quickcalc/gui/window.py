@@ -165,7 +165,7 @@ class MainWindow(QWidget):
         self.history_button = self._tool_button("\ue81c", "Show or hide history (Ctrl+H)", checkable=True)
         self.keypad_button = self._tool_button("\ue75f", "Show or hide the keypad (Ctrl+B)", checkable=True)
         settings_button = self._tool_button("\ue713", "Settings (Ctrl+,)")
-        hide_button = self._tool_button("\ue8bb", "Hide (Esc)")
+        hide_button = self._tool_button("\ue8bb", "Hide")
         for button in (self.history_button, self.keypad_button, settings_button, hide_button):
             bar_layout.addWidget(button)
         layout.addWidget(bar)
@@ -209,7 +209,7 @@ class MainWindow(QWidget):
         self.input.commit.connect(self.commit)
         self.input.previous.connect(lambda: self._navigate(-1))
         self.input.next.connect(lambda: self._navigate(1))
-        self.input.escape.connect(self.hide)
+        self.input.escape.connect(self._clear_input)
         self.history_list.itemClicked.connect(self._on_history_clicked)
         self.history_list.customContextMenuRequested.connect(self._history_menu)
         self.keypad.insert.connect(self._insert)
@@ -402,6 +402,8 @@ class MainWindow(QWidget):
 
     def _clear_input(self) -> None:
         self._showing_result = False
+        self._nav_index = None
+        self._draft = ""
         self.input.clear()
         self._set_result("", "preview")
         self.input.setFocus()

@@ -51,7 +51,7 @@ optionally delete `%APPDATA%\QuickCalc`.
 |---|---|
 | `Ctrl+Alt+C` (global) | Show / hide the window on the monitor under the mouse |
 | `Enter` | Commit: add to history, copy the result to the clipboard |
-| `Esc` | Hide |
+| `Esc` | Clear the input line |
 | `Up` / `Down` | Cycle through earlier inputs |
 | `Ctrl+B` | Show / hide the button keypad |
 | `Ctrl+H` | Show / hide history |
