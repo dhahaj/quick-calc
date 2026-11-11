@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 BUILD = ROOT / "build"
 DIST = ROOT / "dist"
+ICON = ROOT / "quickcalc" / "gui" / "qc.ico"
 
 # Qt modules the app never touches; leaving them out keeps the folder small.
 EXCLUDES = [
@@ -25,26 +26,7 @@ EXCLUDES = [
 ]  # fmt: skip
 
 
-def make_icon(path: Path) -> bool:
-    """Render the in-code app icon to an .ico file for the exe. Optional."""
-    sys.path.insert(0, str(ROOT))
-    try:
-        from PySide6.QtWidgets import QApplication
-
-        from quickcalc.gui.theme import app_icon
-
-        app = QApplication.instance() or QApplication(["build", "-platform", "offscreen"])
-        path.parent.mkdir(parents=True, exist_ok=True)
-        ok = app_icon().pixmap(256, 256).save(str(path), "ICO")
-        del app
-        return ok and path.exists()
-    except Exception as exc:
-        print(f"icon skipped: {exc}")
-        return False
-
-
 def main() -> int:
-    icon = BUILD / "quickcalc.ico"
     command = [
         sys.executable, "-m", "PyInstaller",
         "--noconfirm", "--clean", "--onedir", "--windowed",
@@ -53,9 +35,9 @@ def main() -> int:
         "--workpath", str(BUILD / "pyinstaller"),
         "--specpath", str(BUILD),
         "--collect-data", "pint",  # Pint's unit definition text files
+        "--icon", str(ICON),  # exe icon (Explorer, taskbar)
+        "--add-data", f"{ICON};quickcalc/gui",  # loaded at runtime for the window and tray
     ]  # fmt: skip
-    if make_icon(icon):
-        command += ["--icon", str(icon)]
     for module in EXCLUDES:
         command += ["--exclude-module", module]
     command.append(str(ROOT / "quickcalc" / "__main__.py"))

@@ -1,11 +1,14 @@
-"""Dark and light palettes, the stylesheet, and the generated app icon."""
+"""Dark and light palettes, the stylesheet, and the app icon."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
-from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QColor, QFont, QGuiApplication, QIcon, QPainter, QPixmap
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QGuiApplication, QIcon
+
+ICON_PATH = Path(__file__).with_name("qc.ico")
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,22 +117,5 @@ def stylesheet(p: Palette) -> str:
 
 
 def app_icon() -> QIcon:
-    """Draw the icon in code so the app ships without image files."""
-    icon = QIcon()
-    for size in (16, 20, 24, 32, 48, 64, 128, 256):
-        pixmap = QPixmap(size, size)
-        pixmap.fill(Qt.GlobalColor.transparent)
-        painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(QColor("#2563eb"))
-        radius = size * 0.22
-        painter.drawRoundedRect(QRectF(0, 0, size, size), radius, radius)
-        font = QFont("Segoe UI", 10, QFont.Weight.Bold)
-        font.setPixelSize(int(size * 0.78))
-        painter.setFont(font)
-        painter.setPen(QColor("#ffffff"))
-        painter.drawText(QRectF(0, -size * 0.04, size, size), Qt.AlignmentFlag.AlignCenter, "=")
-        painter.end()
-        icon.addPixmap(pixmap)
-    return icon
+    """The app and tray icon, loaded from the qc.ico shipped next to this module."""
+    return QIcon(str(ICON_PATH))
